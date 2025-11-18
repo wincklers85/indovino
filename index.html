@@ -2,300 +2,28 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <title>L'Indovino v2</title>
+  <title>L’Indovino</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    :root {
-      --bg: #050712;
-      --bg-alt: #0d1020;
-      --card-bg: #171a2a;
-      --text: #ffffff;
-      --muted: #a4a8c3;
-      --accent: #ffb400;
-      --accent-soft: rgba(255,180,0,0.13);
-      --border: rgba(255,255,255,0.08);
-      --danger: #ff4d6a;
-      --radius-lg: 16px;
-      --radius-md: 10px;
-      --radius-pill: 999px;
-      --shadow: 0 18px 40px rgba(0,0,0,0.55);
-      --font: system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;
-    }
-    body[data-theme="light"]{
-      --bg:#f4f5fb;--bg-alt:#ffffff;--card-bg:#ffffff;--text:#141522;
-      --muted:#6c738b;--accent:#6c3bff;--accent-soft:rgba(108,59,255,0.12);
-      --border:rgba(0,0,0,0.06);
-    }
-    body[data-theme="red"]{
-      --bg:#190507;--bg-alt:#26060b;--card-bg:#340910;--text:#ffeef0;
-      --muted:#e49aa9;--accent:#ff3458;--accent-soft:rgba(255,52,88,0.18);
-    }
-    body[data-theme="blue"]{
-      --bg:#010716;--bg-alt:#060c22;--card-bg:#091533;--text:#ecf2ff;
-      --muted:#9eb4ff;--accent:#3ea8ff;--accent-soft:rgba(62,168,255,0.18);
-    }
-    body[data-theme="green"]{
-      --bg:#02100a;--bg-alt:#03170f;--card-bg:#062015;--text:#e8fff4;
-      --muted:#98e0ba;--accent:#35d38a;--accent-soft:rgba(53,211,138,0.18);
-    }
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-    body{
-      margin:0;
-      min-height:100vh;
-      background:radial-gradient(circle at top,#352157 0,var(--bg) 55%,#000 100%);
-      color:var(--text);
-      font-family:var(--font);
-      display:flex;justify-content:center;align-items:stretch;
-    }
-    .app{
-      width:100%;max-width:1100px;padding:14px;
-      display:flex;flex-direction:column;gap:12px;
-    }
-    @media(min-width:900px){.app{padding:20px 20px 22px;}}
-    .topbar{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:8px 10px;border-radius:var(--radius-lg);
-      background:linear-gradient(120deg,rgba(6,10,30,.96),rgba(10,16,48,.92));
-      border:1px solid rgba(255,255,255,.05);
-      box-shadow:var(--shadow);backdrop-filter:blur(16px);
-      gap:8px;
-    }
-    .top-left{display:flex;align-items:center;gap:8px;}
-    .logo{
-      width:30px;height:30px;border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      background:radial-gradient(circle at 30% 20%,#fff 0,#ffe8b7 30%,var(--accent) 70%,#311456 100%);
-      box-shadow:0 0 10px rgba(255,180,0,.7);font-size:18px;
-    }
-    .title-main{font-size:17px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;}
-    .title-sub{font-size:11px;color:var(--muted);}
-    .top-right{display:flex;flex-wrap:wrap;align-items:center;gap:6px;justify-content:flex-end;}
-    .chip{
-      font-size:11px;padding:4px 9px;border-radius:var(--radius-pill);
-      border:1px solid rgba(255,255,255,.08);color:var(--muted);
-      background:rgba(0,0,0,.25);display:inline-flex;align-items:center;gap:4px;
-    }
-    .chip strong{color:var(--text);}
-    .nav-btn{
-      border-radius:var(--radius-pill);border:1px solid transparent;
-      background:transparent;color:var(--muted);font-size:12px;
-      padding:5px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;
-      transition:.18s;
-    }
-    .nav-btn span{font-size:15px;}
-    .nav-btn:hover{background:rgba(255,255,255,.05);color:var(--text);
-      border-color:rgba(255,255,255,.1);}
-    .nav-btn.active{background:var(--accent-soft);border-color:var(--accent);color:var(--text);}
-    .layout{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;}
-    @media(max-width:820px){.layout{grid-template-columns:1fr;}}
-    .card{
-      background:linear-gradient(155deg,var(--card-bg),var(--bg-alt));
-      border-radius:var(--radius-lg);border:1px solid var(--border);
-      box-shadow:var(--shadow);padding:12px 12px 11px;position:relative;
-    }
-    .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:8px;}
-    .card-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:5px;}
-    .card-title span.icon{font-size:18px;}
-    .card-sub{font-size:11px;color:var(--muted);}
-    .badge{
-      font-size:10px;padding:3px 7px;border-radius:var(--radius-pill);
-      border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.25);
-      text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
-    }
-    .card-body{margin-top:4px;}
-    .hidden{display:none!important;}
-    /* Start dialog */
-    .overlay{
-      position:fixed;inset:0;background:rgba(0,0,0,.6);
-      display:flex;align-items:center;justify-content:center;
-      z-index:10;
-    }
-    .modal{
-      background:linear-gradient(145deg,#22163b,var(--bg-alt));
-      border-radius:18px;border:1px solid rgba(255,255,255,.16);
-      padding:14px 14px 12px;max-width:360px;width:90%;
-      box-shadow:var(--shadow);
-    }
-    .modal-title{font-size:18px;font-weight:650;margin-bottom:5px;}
-    .modal-sub{font-size:12px;color:var(--muted);margin-bottom:10px;}
-    .modal-btns{display:flex;flex-direction:column;gap:6px;}
-    .btn{
-      border-radius:var(--radius-pill);border:none;padding:6px 12px;
-      font-size:12px;cursor:pointer;display:inline-flex;align-items:center;
-      justify-content:center;gap:6px;transition:.17s;font-weight:500;
-    }
-    .btn-primary{
-      background:linear-gradient(130deg,var(--accent),#ffd96a);
-      color:#221309;box-shadow:0 10px 26px rgba(0,0,0,.65);
-    }
-    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(0,0,0,.7);}
-    .btn-ghost{
-      background:rgba(0,0,0,.3);color:var(--muted);
-      border:1px solid rgba(255,255,255,.14);
-    }
-    .btn-ghost:hover{background:rgba(255,255,255,.06);color:var(--text);}
-    .btn-sm{padding:4px 9px;font-size:11px;}
-    .btn.disabled,.btn[disabled]{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
-    /* Games menu */
-    .games-grid{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:4px;
-    }
-    .game-card{
-      border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,.09);
-      padding:10px;cursor:pointer;transition:.2s;
-      background:radial-gradient(circle at top,rgba(255,255,255,.08),rgba(0,0,0,.9));
-      position:relative;overflow:hidden;
-    }
-    .game-card:hover{
-      transform:translateY(-2px);box-shadow:0 15px 32px rgba(0,0,0,.65);
-      border-color:rgba(255,255,255,.2);
-    }
-    .game-icon{
-      width:32px;height:32px;border-radius:13px;display:flex;align-items:center;justify-content:center;
-      background:rgba(0,0,0,.4);margin-bottom:4px;font-size:18px;
-    }
-    .game-name{font-size:13px;font-weight:600;margin-bottom:2px;}
-    .game-desc{font-size:11px;color:var(--muted);}
-    .game-chip{
-      position:absolute;right:8px;top:8px;font-size:10px;padding:2px 6px;
-      border-radius:var(--radius-pill);border:1px solid rgba(255,255,255,.16);
-      background:rgba(0,0,0,.4);color:var(--muted);
-    }
-    /* Form */
-    .form-grid{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));
-      gap:8px 10px;margin-top:4px;
-    }
-    .form-group{display:flex;flex-direction:column;font-size:11px;gap:3px;}
-    .form-group label{color:var(--muted);}
-    .input,.select,.textarea{
-      border-radius:9px;border:1px solid rgba(255,255,255,.14);
-      padding:6px 8px;font-size:12px;background:rgba(3,6,18,.95);
-      color:var(--text);outline:none;transition:.16s;
-      font-family:var(--font);
-    }
-    .input:focus,.select:focus,.textarea:focus{
-      border-color:var(--accent);box-shadow:0 0 0 1px rgba(255,255,255,.08);
-      background:rgba(5,9,22,.98);
-    }
-    .row-inline{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
-    /* Profile list */
-    .profiles-list{display:flex;flex-direction:column;gap:5px;margin-top:4px;}
-    .profile-item{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:7px 8px;border-radius:var(--radius-md);
-      background:rgba(0,0,0,.26);border:1px solid rgba(255,255,255,.08);
-    }
-    .profile-main{display:flex;align-items:center;gap:7px;font-size:13px;}
-    .avatar{
-      width:26px;height:26px;border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      background:radial-gradient(circle at 30% 20%,#fff 0,#ffe9b5 28%,var(--accent) 70%,#2b1144 100%);
-      font-size:15px;
-    }
-    .profile-meta{font-size:10px;color:var(--muted);}
-    .profile-actions{display:flex;align-items:center;gap:4px;}
-    .pill-btn{
-      border-radius:var(--radius-pill);border:1px solid rgba(255,255,255,.2);
-      background:rgba(0,0,0,.3);color:var(--text);font-size:11px;
-      padding:3px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;
-      transition:.16s;
-    }
-    .pill-btn:hover{background:rgba(255,255,255,.06);}
-    .pill-btn.danger{border-color:var(--danger);color:#ff99aa;}
-    .empty-text{font-size:11px;color:var(--muted);margin-top:4px;}
-    hr{border:none;border-top:1px solid rgba(255,255,255,.06);margin:8px 0;}
-    /* Game views */
-    .game-view{margin-top:4px;}
-    .breadcrumbs{font-size:11px;color:var(--muted);}
-    .breadcrumbs strong{color:var(--text);}
-    .pill-info{
-      font-size:11px;color:var(--muted);padding:4px 8px;border-radius:var(--radius-pill);
-      background:rgba(0,0,0,.26);border:1px solid rgba(255,255,255,.08);margin-top:4px;
-    }
-    .question-card{
-      margin-top:6px;padding:9px 9px;border-radius:var(--radius-lg);
-      background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.12);
-    }
-    .question-text{font-size:13px;margin-bottom:5px;}
-    .answers{
-      display:grid;grid-template-columns:1fr;gap:5px;
-    }
-    @media(min-width:650px){.answers{grid-template-columns:1fr 1fr;}}
-    .answer-btn{
-      border-radius:9px;border:1px solid rgba(255,255,255,.14);
-      background:rgba(5,8,20,.96);color:var(--text);
-      font-size:12px;padding:6px 8px;text-align:left;cursor:pointer;
-      transition:.15s;
-    }
-    .answer-btn:hover{background:rgba(255,255,255,.06);}
-    .q-footer{margin-top:5px;font-size:10px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;}
-    .result-box{
-      margin-top:8px;padding:9px;border-radius:var(--radius-lg);
-      background:var(--accent-soft);border:1px solid rgba(255,255,255,.16);
-      font-size:12px;box-shadow:0 12px 30px rgba(0,0,0,.6);
-    }
-    .result-title{font-weight:600;margin-bottom:3px;font-size:13px;}
-    .result-main{margin-bottom:3px;font-size:13px;}
-    .result-meta{font-size:11px;color:var(--muted);}
-    /* Magic 8 & pendulum */
-    .two-cols{display:grid;grid-template-columns:1.1fr .9fr;gap:8px;margin-top:4px;}
-    @media(max-width:820px){.two-cols{grid-template-columns:1fr;}}
-    .ball{
-      width:130px;height:130px;border-radius:50%;margin:6px auto 2px;
-      background:radial-gradient(circle at 30% 20%,#fff 0,#cfcfff 22%,#1a1840 58%,#02000a 100%);
-      box-shadow:0 18px 36px rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;
-    }
-    .ball-inner{
-      width:72px;height:72px;border-radius:50%;
-      background:radial-gradient(circle at 30% 20%,#3940ff 0,#151653 60%,#050516 100%);
-      display:flex;align-items:center;justify-content:center;
-      font-size:10px;color:#e8ecff;text-align:center;padding:6px;text-transform:uppercase;
-      letter-spacing:.03em;
-    }
-    .pendulum-wrap{
-      height:150px;display:flex;align-items:flex-start;justify-content:center;position:relative;margin-top:4px;
-    }
-    .pendulum-line{
-      width:2px;height:90px;background:rgba(255,255,255,.5);transform-origin:top center;
-      animation:pendStill 2s infinite;
-    }
-    .pendulum-bob{
-      width:26px;height:26px;border-radius:50%;background:var(--accent);
-      position:absolute;top:85px;left:50%;transform:translateX(-50%);
-      box-shadow:0 8px 18px rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;
-      font-size:12px;color:#201003;
-    }
-    @keyframes pendSwing{
-      0%{transform:rotate(-25deg);}
-      50%{transform:rotate(25deg);}
-      100%{transform:rotate(-25deg);}
-    }
-    @keyframes pendStill{
-      0%,100%{transform:rotate(-5deg);}
-      50%{transform:rotate(5deg);}
-    }
-    /* History & themes */
-    .theme-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
-    .theme-pill{
-      border-radius:var(--radius-pill);border:1px solid rgba(255,255,255,.16);
-      background:rgba(0,0,0,.3);font-size:11px;padding:4px 9px;
-      display:inline-flex;align-items:center;gap:6px;cursor:pointer;transition:.16s;
-    }
-    .theme-pill.active{border-color:var(--accent);background:var(--accent-soft);}
-    .dot{width:11px;height:11px;border-radius:50%;border:1px solid rgba(0,0,0,.6);}
-    .history-list{max-height:220px;overflow-y:auto;margin-top:6px;padding-right:3px;font-size:11px;}
-    .history-item{
-      padding:5px 7px;border-radius:8px;border:1px solid rgba(255,255,255,.1);
-      background:rgba(0,0,0,.25);margin-bottom:4px;
-    }
-    .history-meta{font-size:10px;color:var(--muted);margin-top:2px;}
-    .history-list::-webkit-scrollbar{width:6px;}
-    .history-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:999px;}
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body data-theme="dark">
 <div class="app">
+
+  <!-- Splash mistica -->
+  <div class="splash" id="splashScreen">
+    <div class="splash-inner">
+      <div class="splash-orb">
+        <div class="splash-orb-glow"></div>
+        <div class="splash-orb-icon">🔮</div>
+      </div>
+      <div class="splash-title">L’INDOVINO</div>
+      <div class="splash-sub">Quiz, statistiche &amp; un pizzico di magia</div>
+      <div class="splash-dots">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
   <!-- Start modal -->
   <div class="overlay" id="startOverlay">
     <div class="modal">
@@ -317,7 +45,7 @@
       <div class="logo">🔮</div>
       <div>
         <div class="title-main">L’Indovino</div>
-        <div class="title-sub">Quiz, statistiche & un pizzico di magia</div>
+        <div class="title-sub">Quiz, statistiche &amp; un pizzico di magia</div>
       </div>
     </div>
     <div class="top-right">
@@ -342,6 +70,7 @@
         </div>
         <div class="badge">Modalità quiz</div>
       </div>
+
       <div class="card-body">
         <!-- Menu giochi -->
         <div id="gamesMenu">
@@ -456,9 +185,9 @@
               </div>
               <div class="result-box hidden" id="magic8Text"></div>
             </div>
-            <div class="card" style="padding:8px;">
-              <div class="card-title" style="font-size:13px;margin-bottom:3px;">Sfera di previsione</div>
-              <div class="card-sub" style="font-size:11px;">Risposta sintetica, con un accenno al tuo profilo quando possibile.</div>
+            <div class="card mini-card">
+              <div class="card-title mini-title">Sfera di previsione</div>
+              <div class="card-sub mini-sub">Risposta sintetica, con un accenno al tuo profilo quando possibile.</div>
               <div class="ball">
                 <div class="ball-inner" id="magic8Inner">Fai<br>una domanda</div>
               </div>
@@ -500,9 +229,9 @@
               </div>
               <div class="result-box hidden" id="pendResult"></div>
             </div>
-            <div class="card" style="padding:8px;">
-              <div class="card-title" style="font-size:13px;margin-bottom:3px;">Pendolo</div>
-              <div class="card-sub" style="font-size:11px;">Oscillazione verso SÌ, NO o FORSE (solo per gioco).</div>
+            <div class="card mini-card">
+              <div class="card-title mini-title">Pendolo</div>
+              <div class="card-sub mini-sub">Oscillazione verso SÌ, NO o FORSE (solo per gioco).</div>
               <div class="pendulum-wrap">
                 <div class="pendulum-line" id="pendLine"></div>
                 <div class="pendulum-bob" id="pendBob">?</div>
@@ -554,13 +283,17 @@
         </div>
         <div class="badge" id="profilesBadge">0 / 5</div>
       </div>
+
       <div class="card-body">
         <div class="profiles-list" id="profilesList"></div>
         <div class="empty-text hidden" id="profilesEmpty">
           Nessun profilo. Puoi sempre usare L’Indovino in modalità standard.
         </div>
+
         <hr />
-        <div class="card-title" style="font-size:14px;margin-bottom:3px;">Crea / modifica profilo</div>
+
+        <div class="card-title small-title">Crea / modifica profilo</div>
+
         <div class="form-grid">
           <div class="form-group">
             <label>Nome</label>
@@ -666,6 +399,7 @@
             </select>
           </div>
         </div>
+
         <div class="row-inline">
           <button class="btn btn-primary btn-sm" id="saveProfileBtn">💾 Salva profilo</button>
           <button class="btn btn-ghost btn-sm" id="clearProfileFormBtn">Pulisci modulo</button>
@@ -678,25 +412,41 @@
     <section class="card hidden" id="settingsView">
       <div class="card-header">
         <div>
-          <div class="card-title"><span class="icon">⚙️</span>Impostazioni & storico</div>
+          <div class="card-title"><span class="icon">⚙️</span>Impostazioni &amp; storico</div>
           <div class="card-sub">Tema dell’oracolo e risultati delle sessioni.</div>
         </div>
-        <div class="badge">Tema & log</div>
+        <div class="badge">Tema &amp; log</div>
       </div>
+
       <div class="card-body">
-        <div class="card-title" style="font-size:14px;margin-bottom:2px;">Tema</div>
+        <div class="card-title small-title">Tema</div>
         <div class="card-sub">Scegli uno dei temi. L’impostazione resta salvata sul dispositivo.</div>
+
         <div class="theme-row" id="themeRow">
-          <button class="theme-pill" data-theme="dark"><div class="dot" style="background:radial-gradient(circle,#fff,#050712);"></div>Scuro</button>
-          <button class="theme-pill" data-theme="light"><div class="dot" style="background:#f0f0ff;"></div>Chiaro</button>
-          <button class="theme-pill" data-theme="red"><div class="dot" style="background:#e93b5f;"></div>Rosso</button>
-          <button class="theme-pill" data-theme="blue"><div class="dot" style="background:#347eff;"></div>Azzurro</button>
-          <button class="theme-pill" data-theme="green"><div class="dot" style="background:#27c976;"></div>Verde</button>
+          <button class="theme-pill" data-theme="dark">
+            <div class="dot dot-dark"></div>Scuro
+          </button>
+          <button class="theme-pill" data-theme="light">
+            <div class="dot dot-light"></div>Chiaro
+          </button>
+          <button class="theme-pill" data-theme="red">
+            <div class="dot dot-red"></div>Rosso
+          </button>
+          <button class="theme-pill" data-theme="blue">
+            <div class="dot dot-blue"></div>Azzurro
+          </button>
+          <button class="theme-pill" data-theme="green">
+            <div class="dot dot-green"></div>Verde
+          </button>
         </div>
+
         <hr />
-        <div class="card-title" style="font-size:14px;margin-bottom:2px;">Storico risultati</div>
+
+        <div class="card-title small-title">Storico risultati</div>
         <div class="card-sub">Ultime sessioni dell’oracolo (max 50). Utile per vedere come cambiano le risposte.</div>
+
         <div class="history-list" id="historyList"></div>
+
         <div class="row-inline">
           <button class="btn btn-ghost btn-sm" id="clearHistoryBtn">Pulisci storico</button>
         </div>
@@ -705,840 +455,6 @@
   </main>
 </div>
 
-<script>
-  // === STORAGE & PROFILI ===
-  const MAX_PROFILES = 5;
-  const KEYS = {
-    profiles: 'indovino_profiles_v2',
-    theme: 'indovino_theme_v2',
-    currentProfile: 'indovino_current_profile_v2',
-    history: 'indovino_history_v2'
-  };
-  function loadJSON(k,f){try{const r=localStorage.getItem(k);return r?JSON.parse(r):f;}catch{ return f;}}
-  function saveJSON(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
-
-  let profiles = loadJSON(KEYS.profiles, []);
-  let currentProfileIndex = loadJSON(KEYS.currentProfile, null);
-  let historyLog = loadJSON(KEYS.history, []);
-
-  function getProfile(){
-    if(currentProfileIndex==null || !profiles[currentProfileIndex]){
-      return {
-        name:'Standard',surname:'',dob:'',sesso:'',
-        sposato:'no',haFigli:'no',numFigli:0,
-        guida:'si',animali:'no',lavora:'si',
-        casa:'affitto',zona:'citta',trasferirsi:'forse',piaceZona:'abbastanza'
-      };
-    }
-    return profiles[currentProfileIndex];
-  }
-
-  const currentProfileLabel=document.getElementById('currentProfileLabel');
-  function updateProfileLabel(){
-    const p=getProfile();
-    if(currentProfileIndex==null || !profiles[currentProfileIndex]){
-      currentProfileLabel.textContent='Standard';
-    }else{
-      currentProfileLabel.textContent=p.name+' '+p.surname;
-    }
-  }
-
-  // === START MODAL ===
-  const startOverlay=document.getElementById('startOverlay');
-  const btnStartWithProfile=document.getElementById('btnStartWithProfile');
-  const btnStartWithoutProfile=document.getElementById('btnStartWithoutProfile');
-  btnStartWithProfile.onclick=()=>{ showView('profilesView'); startOverlay.classList.add('hidden'); };
-  btnStartWithoutProfile.onclick=()=>{ currentProfileIndex=null; saveJSON(KEYS.currentProfile,currentProfileIndex); updateProfileLabel(); startOverlay.classList.add('hidden'); };
-
-  // Se c'è già un profilo selezionato, salta il modale
-  if(profiles.length && currentProfileIndex!=null && profiles[currentProfileIndex]){
-    startOverlay.classList.add('hidden');
-  }
-
-  // === NAV VISTE PRINCIPALI ===
-  const navBtns=[...document.querySelectorAll('.nav-btn')];
-  function showView(id){
-    document.getElementById('homeView').classList.add('hidden');
-    document.getElementById('profilesView').classList.add('hidden');
-    document.getElementById('settingsView').classList.add('hidden');
-    document.getElementById(id).classList.remove('hidden');
-    navBtns.forEach(b=>b.classList.toggle('active',b.dataset.view===id));
-  }
-  navBtns.forEach(b=>b.onclick=()=>showView(b.dataset.view));
-
-  // === PROFILI ===
-  const profilesList=document.getElementById('profilesList');
-  const profilesEmpty=document.getElementById('profilesEmpty');
-  const profilesBadge=document.getElementById('profilesBadge');
-
-  function renderProfiles(){
-    profilesList.innerHTML='';
-    profilesBadge.textContent=`${profiles.length} / ${MAX_PROFILES}`;
-    profilesEmpty.classList.toggle('hidden',profiles.length>0);
-
-    profiles.forEach((p,i)=>{
-      const div=document.createElement('div');div.className='profile-item';
-      const main=document.createElement('div');main.className='profile-main';
-      const av=document.createElement('div');av.className='avatar';av.textContent='👤';
-      const textWrap=document.createElement('div');
-      const n=document.createElement('div');n.textContent=p.name+' '+p.surname;n.style.fontWeight='500';
-      const meta=document.createElement('div');meta.className='profile-meta';
-      const parts=[];
-      if(p.dob) parts.push('Nato il '+p.dob);
-      if(p.zona) parts.push('Zona: '+(p.zona==='mare'?'mare':p.zona==='montagna'?'montagna':'città'));
-      meta.textContent=parts.join(' · ');
-      textWrap.append(n,meta);main.append(av,textWrap);
-
-      const act=document.createElement('div');act.className='profile-actions';
-      const use=document.createElement('button');
-      use.className='pill-btn';use.textContent='Usa';
-      use.onclick=()=>{currentProfileIndex=i;saveJSON(KEYS.currentProfile,currentProfileIndex);updateProfileLabel();};
-      const del=document.createElement('button');
-      del.className='pill-btn danger';del.textContent='🗑';
-      del.title='Elimina profilo';
-      del.onclick=()=>{
-        if(confirm(`Eliminare il profilo "${p.name} ${p.surname}"?`)){
-          profiles.splice(i,1);
-          if(currentProfileIndex===i) currentProfileIndex=null;
-          else if(currentProfileIndex>i) currentProfileIndex--;
-          saveJSON(KEYS.profiles,profiles);saveJSON(KEYS.currentProfile,currentProfileIndex);
-          renderProfiles();updateProfileLabel();updateCreateBtnState();
-        }
-      };
-      act.append(use,del);div.append(main,act);profilesList.appendChild(div);
-    });
-  }
-
-  const pfNome=document.getElementById('pfNome');
-  const pfCognome=document.getElementById('pfCognome');
-  const pfDob=document.getElementById('pfDob');
-  const pfSesso=document.getElementById('pfSesso');
-  const pfSposato=document.getElementById('pfSposato');
-  const pfHaFigli=document.getElementById('pfHaFigli');
-  const pfNumFigli=document.getElementById('pfNumFigli');
-  const pfGuida=document.getElementById('pfGuida');
-  const pfAnimali=document.getElementById('pfAnimali');
-  const pfLavora=document.getElementById('pfLavora');
-  const pfCasa=document.getElementById('pfCasa');
-  const pfZona=document.getElementById('pfZona');
-  const pfTrasferirsi=document.getElementById('pfTrasferirsi');
-  const pfPiaceZona=document.getElementById('pfPiaceZona');
-  const saveProfileBtn=document.getElementById('saveProfileBtn');
-  const clearProfileFormBtn=document.getElementById('clearProfileFormBtn');
-  const noProfileBtn=document.getElementById('noProfileBtn');
-
-  function clearProfileForm(){
-    [pfNome,pfCognome,pfDob,pfNumFigli].forEach(i=>i.value='');
-    [pfSesso,pfSposato,pfHaFigli,pfGuida,pfAnimali,pfLavora,pfCasa,pfZona,pfTrasferirsi,pfPiaceZona].forEach(s=>s.value='');
-  }
-  function updateCreateBtnState(){
-    const full=profiles.length>=MAX_PROFILES;
-    saveProfileBtn.disabled=full;
-    saveProfileBtn.classList.toggle('disabled',full);
-  }
-  saveProfileBtn.onclick=()=>{
-    if(profiles.length>=MAX_PROFILES){alert('Hai già 5 profili. Cancella un profilo per crearne un altro.');return;}
-    const p={
-      name:pfNome.value.trim(),surname:pfCognome.value.trim(),
-      dob:pfDob.value||'',sesso:pfSesso.value||'',
-      sposato:pfSposato.value||'',haFigli:pfHaFigli.value||'',
-      numFigli:Number(pfNumFigli.value||0),
-      guida:pfGuida.value||'',animali:pfAnimali.value||'',
-      lavora:pfLavora.value||'',casa:pfCasa.value||'',
-      zona:pfZona.value||'',trasferirsi:pfTrasferirsi.value||'',
-      piaceZona:pfPiaceZona.value||''
-    };
-    if(!p.name || !p.surname){alert('Inserisci almeno nome e cognome.');return;}
-    profiles.push(p);saveJSON(KEYS.profiles,profiles);
-    currentProfileIndex=profiles.length-1;saveJSON(KEYS.currentProfile,currentProfileIndex);
-    renderProfiles();updateProfileLabel();updateCreateBtnState();clearProfileForm();
-    alert('Profilo salvato!');
-  };
-  clearProfileFormBtn.onclick=clearProfileForm;
-  noProfileBtn.onclick=()=>{
-    currentProfileIndex=null;saveJSON(KEYS.currentProfile,currentProfileIndex);updateProfileLabel();
-    alert('Sei in modalità standard (senza profilo).');
-  };
-
-  // === TEMA & STORICO ===
-  const themeRow=document.getElementById('themeRow');
-  function applyTheme(t){
-    document.body.setAttribute('data-theme',t);
-    localStorage.setItem(KEYS.theme,t);
-    [...themeRow.querySelectorAll('.theme-pill')].forEach(b=>b.classList.toggle('active',b.dataset.theme===t));
-  }
-  const savedTheme=localStorage.getItem(KEYS.theme) || 'dark';
-  applyTheme(savedTheme);
-  themeRow.querySelectorAll('.theme-pill').forEach(b=>b.onclick=()=>applyTheme(b.dataset.theme));
-
-  const historyList=document.getElementById('historyList');
-  const clearHistoryBtn=document.getElementById('clearHistoryBtn');
-  function addHistory(game,summary){
-    const p=getProfile();
-    const ts=new Date().toISOString();
-    historyLog.unshift({
-      game,summary,
-      profile: (currentProfileIndex!=null && profiles[currentProfileIndex]) ? p.name+' '+p.surname : 'Standard',
-      ts
-    });
-    historyLog=historyLog.slice(0,50);
-    saveJSON(KEYS.history,historyLog);
-    renderHistory();
-  }
-  function renderHistory(){
-    historyList.innerHTML='';
-    if(!historyLog.length){
-      const d=document.createElement('div');
-      d.className='history-item';
-      d.textContent='Nessun risultato salvato finora.';
-      historyList.appendChild(d);return;
-    }
-    historyLog.forEach(h=>{
-      const d=document.createElement('div');d.className='history-item';
-      const main=document.createElement('div');
-      main.innerHTML=`<strong>${h.game}</strong>: ${h.summary}`;
-      const meta=document.createElement('div');meta.className='history-meta';
-      const dt=new Date(h.ts);
-      meta.textContent=`${h.profile} · ${dt.toLocaleDateString('it-IT')} ${dt.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})}`;
-      d.append(main,meta);historyList.appendChild(d);
-    });
-  }
-  clearHistoryBtn.onclick=()=>{
-    if(!historyLog.length)return;
-    if(confirm('Cancellare tutto lo storico?')){historyLog=[];saveJSON(KEYS.history,historyLog);renderHistory();}
-  };
-
-  // === GIOCHI: NAV INTERNO ===
-  const gamesMenu=document.getElementById('gamesMenu');
-  const gameViews={
-    job:document.getElementById('gameJob'),
-    kids:document.getElementById('gameKids'),
-    twentyq:document.getElementById('gameTwentyQ'),
-    magic8:document.getElementById('gameMagic8'),
-    tarot:document.getElementById('gameTarot'),
-    pendulum:document.getElementById('gamePendulum'),
-    life:document.getElementById('gameLife'),
-    where:document.getElementById('gameWhere'),
-    luck:document.getElementById('gameLuck')
-  };
-  function openGame(key){
-    gamesMenu.classList.add('hidden');
-    Object.values(gameViews).forEach(v=>v.classList.add('hidden'));
-    gameViews[key].classList.remove('hidden');
-  }
-  function backToGames(key){
-    // reset minimi
-    if(key==='job'){jobState.index=0;jobState.scores=[0,0,0,0,0,0];renderJobQuestion();jobResult.classList.add('hidden');}
-    if(key==='kids'){kidsState.index=0;kidsState.score=0;renderKidsQuestion();kidsResult.classList.add('hidden');}
-    if(key==='twentyq'){resetTwentyQ();}
-    if(key==='magic8'){magic8Question.value='';magic8Inner.textContent='Fai\nuna domanda';magic8Text.classList.add('hidden');}
-    if(key==='tarot'){tarotResult.classList.add('hidden');}
-    if(key==='pendulum'){pendQuestion.value='';pendResult.classList.add('hidden');pendLine.style.animation='pendStill 2s infinite';pendBob.textContent='?';}
-    if(key==='life'){lifeState.index=0;lifeState.score=0;renderLifeQuestion();lifeResult.classList.add('hidden');}
-    if(key==='where'){whereState.index=0;whereState.score=0;renderWhereQuestion();whereResult.classList.add('hidden');}
-    gamesMenu.classList.remove('hidden');
-    Object.values(gameViews).forEach(v=>v.classList.add('hidden'));
-  }
-  document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>backToGames(b.dataset.back));
-  document.querySelectorAll('.game-card').forEach(c=>{
-    c.onclick=()=>{
-      const g=c.dataset.game;openGame(g);
-      if(g==='job')renderJobQuestion();
-      if(g==='kids')renderKidsQuestion();
-      if(g==='twentyq')startTwentyQ();
-      if(g==='life')renderLifeQuestion();
-      if(g==='where')renderWhereQuestion();
-      if(g==='luck')renderLuck();
-    };
-  });
-
-  // === GIOCO: CHE LAVORO FA PER ME ===
-  const jobQuestions=[
-    {text:'A scuola quali materie ti piacevano di più?',
-      opts:['Matematica / informatica','Biologia / scienze','Italiano / storia','Arte / musica'],
-      score:[[2,0,0,1,0,0],[0,2,0,0,0,1],[0,0,2,0,0,0],[0,0,0,0,2,0]]},
-    {text:'Come affronti di solito i problemi?',
-      opts:['Analizzo con calma','Parlo con le persone','Passo subito all’azione','Cerco una soluzione creativa'],
-      score:[[2,0,0,0,0,0],[0,1,1,0,0,0],[0,0,0,0,0,2],[0,0,0,0,2,0]]},
-    {text:'Che rapporto hai con la tecnologia?',
-      opts:['Smanetto volentieri','La uso senza problemi','La uso solo se serve','La eviterei'],
-      score:[[2,0,0,0,1,0],[0,0,0,0,1,0],[0,0,0,0,0,0],[0,0,0,0,0,2]]},
-    {text:'Quanto ti piace stare a contatto con le persone?',
-      opts:['Tantissimo','Abbastanza','Solo se serve','Quasi per niente'],
-      score:[[0,1,2,1,0,0],[0,0,1,0,0,0],[1,0,0,0,0,0],[1,0,0,0,0,0]]},
-    {text:'Ti attira l’idea di aiutare gli altri in modo diretto (salute, supporto)?',
-      opts:['Moltissimo','Un po’','Poco','Per nulla'],
-      score=[[0,3,1,0,0,0],[0,1,1,0,0,0],[0,0,0,0,0,0],[0,0,0,1,0,0]]},
-    {text:'Ambiente di lavoro ideale?',
-      opts:['Ufficio / laboratorio','Ospedale / studio','Scuola / formazione','All’aperto / su strada'],
-      score:[[2,0,0,1,0,0],[0,2,0,0,0,0],[0,0,2,0,0,0],[0,0,0,0,0,3]]},
-    {text:'Come ti trovi con i bambini?',
-      opts:['Benissimo','Abbastanza bene','Non molto','Dipende'],
-      score=[[0,0,3,0,0,0],[0,0,1,0,0,0],[0,0,0,0,0,0],[0,0,1,0,0,0]]},
-    {text:'Ti senti portato per ruoli di responsabilità / gestione?',
-      opts:['Sì, molto','Sì, se serve','Poco','Meglio di no'],
-      score=[[0,0,0,3,0,0],[1,0,0,1,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},
-    {text:'Ti piace lavorare con le mani (riparazioni, bricolage)?',
-      opts:['Sì, tanto','Ogni tanto','Poco','Per nulla'],
-      score=[[0,0,0,0,0,3],[1,0,0,0,0,1],[0,0,0,0,0,0],[0,0,0,0,0,0]]},
-    {text:'Che rapporto hai con gli orari fissi?',
-      opts:['Li preferisco','Un po’ di flessibilità','Meglio orari variabili','Dipende'],
-      score=[[1,1,0,0,0,0],[0,0,1,0,0,0],[0,0,0,2,1,1],[0,0,0,1,0,0]]},
-    {text:'Quanto ti attira l’idea di creare contenuti (video, grafica, musica)?',
-      opts:['Moltissimo','Abbastanza','Poco','Per nulla'],
-      score=[[0,0,0,0,3,0],[0,0,0,0,1,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},
-    {text:'Cosa ti interessa di più nel lavoro?',
-      opts:['Stabilità economica','Aiutare le persone','Libertà e autonomia','Esprimermi e non annoiarmi'],
-      score=[[0,0,0,2,0,0],[0,2,0,0,0,0],[0,0,0,2,1,1],[0,0,0,0,2,0]]},
-    {text:'Quanto sei disposto a studiare/aggiornarti?',
-      opts:['Molto','Abbastanza','Poco','Quasi niente'],
-      score=[[2,1,1,1,1,0],[1,1,0,0,0,0],[0,0,0,0,0,1],[0,0,0,0,0,0]]},
-    {text:'Parlare davanti a un gruppo?',
-      opts:['Mi piace','Posso farlo','Preferirei evitare','Solo se obbligato'],
-      score=[[0,0,1,2,0,0],[0,0,1,1,0,0],[0,0,0,0,0,0],[0,0,0,1,0,0]]},
-    {text:'Progetti lunghi (mesi/anni)?',
-      opts:['Mi piacciono','Dipende','Preferisco cose brevi','Non so'],
-      score=[[2,0,0,1,0,0],[1,0,0,1,0,0],[0,0,0,0,1,1],[0,0,0,0,0,0]]},
-    {text:'Ti impressionano sangue / situazioni forti?',
-      opts:['No','Un po’','Molto','Tantissimo'],
-      score=[[0,2,0,0,0,0],[0,1,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},
-    {text:'Quale frase ti rappresenta di più?',
-      opts:['Se è rotto, lo aggiusto','Se soffre, lo aiuto','Se non capisce, glielo spiego','Se è noioso, lo reinvento'],
-      score=[[2,0,0,0,0,2],[0,3,0,0,0,0],[0,0,3,0,0,0],[0,0,0,0,3,0]]},
-    {text:'Quanto ti attira aprire qualcosa di tuo?',
-      opts:['Molto','Abbastanza','Poco','Per nulla'],
-      score=[[0,0,0,3,1,0],[0,0,0,2,0,0],[0,0,0,1,0,0],[0,0,0,0,0,0]]},
-    {text:'Tempo libero ideale?',
-      opts:['Tecnologia / progetti','Amici e famiglia','Attività creative','Sport / natura'],
-      score=[[2,0,0,0,1,0],[0,1,1,0,0,0],[0,0,0,0,3,0],[0,0,0,0,0,3]]},
-    {text:'Se domani cambiassi lavoro, cosa ti emozionerebbe di più?',
-      opts:['Ruolo tecnico','Ruolo di aiuto','Ruolo di gestione','Ruolo creativo'],
-      score=[[3,0,0,0,0,0],[0,3,0,0,0,0],[0,0,0,3,0,0],[0,0,0,0,3,0]]}
-  ];
-  const jobQuestionBox=document.getElementById('jobQuestionBox');
-  const jobResult=document.getElementById('jobResult');
-  const jobState={index:0,scores:[0,0,0,0,0,0]};
-  function renderJobQuestion(){
-    const i=jobState.index;
-    if(i>=jobQuestions.length){showJobResult();return;}
-    const q=jobQuestions[i];
-    jobQuestionBox.innerHTML='';
-    const qt=document.createElement('div');qt.className='question-text';
-    qt.textContent=`${i+1}. ${q.text}`;jobQuestionBox.appendChild(qt);
-    const ans=document.createElement('div');ans.className='answers';
-    q.opts.forEach((o,idx)=>{
-      const b=document.createElement('button');b.className='answer-btn';b.textContent=o;
-      b.onclick=()=>{
-        const s=q.score[idx];for(let k=0;k<jobState.scores.length;k++)jobState.scores[k]+=s[k]||0;
-        jobState.index++;renderJobQuestion();
-      };
-      ans.appendChild(b);
-    });
-    jobQuestionBox.appendChild(ans);
-    const f=document.createElement('div');f.className='q-footer';
-    f.innerHTML=`<span>Domanda ${i+1} di ${jobQuestions.length}</span><span>Rispondi di pancia 😉</span>`;
-    jobQuestionBox.appendChild(f);
-  }
-  function showJobResult(){
-    const scores=jobState.scores;let best=0,bestVal=scores[0];
-    for(let i=1;i<scores.length;i++){if(scores[i]>bestVal){bestVal=scores[i];best=i;}}
-    const cats=[
-      'Area tecnica / ingegneristica',
-      'Area sanitaria / assistenziale',
-      'Area educativa / sociale',
-      'Area business / organizzativa',
-      'Area creativa / digitale',
-      'Area manuale / outdoor'
-    ];
-    const area=cats[best]||'Profilo misto';
-    const p=getProfile();
-    const nowYear=new Date().getFullYear();
-    const age=p.dob? nowYear - new Date(p.dob).getFullYear() : null;
-    let note='';
-    if((p.haFigli==='si' || p.numFigli>0)) note+=' Hai figli: ruoli con orari prevedibili possono aiutare l’equilibrio casa–lavoro.';
-    if(p.zona==='montagna') note+=' Vivere in montagna apre scenari extra su turismo, outdoor e manutenzione sul territorio.';
-    if(p.zona==='mare') note+=' Il mare favorisce ruoli stagionali, turismo e accoglienza.';
-    if(age && age>40) note+=' L’esperienza ti rende naturale anche il passaggio verso formazione o coordinamento.';
-    jobResult.classList.remove('hidden');
-    jobResult.innerHTML=
-      `<div class="result-title">Area suggerita</div>
-       <div class="result-main">${area}</div>
-       <div class="result-meta">Questo è un suggerimento statistico basato sulle risposte e su alcuni dati del profilo. Non è un verdetto definitivo, ma una direzione da esplorare.${note}</div>`;
-    addHistory('Che lavoro fa per me?',area);
-  }
-
-  // === GIOCO: QUANTI FIGLI AVRÒ (migliorato) ===
-  const kidsQuestionBox=document.getElementById('kidsQuestionBox');
-  const kidsResult=document.getElementById('kidsResult');
-  const kidsQuestions=[
-    'Ti piacciono i bambini?',
-    'Ti immagini spesso con una famiglia numerosa?',
-    'Quanto tieni alla tranquillità e al silenzio in casa?',
-    'Quanto ti pesa la mancanza di sonno?',
-    'Quanto ti piace passare serate in casa invece che uscire?',
-    'Quanto ti senti stabile economicamente (sensazione, non ISEE)?',
-    'Quanto ti piace organizzare caos, imprevisti e logistica familiare?',
-    'Quanto ti pesa l’idea di rinunciare a hobby e tempo personale?',
-    'Quanto sei orientato alla famiglia rispetto al lavoro?',
-    'Quanto trovi gratificante vedere crescere qualcuno che dipende da te?'
-  ];
-  const kidsState={index:0,score:0};
-  function renderKidsQuestion(){
-    const i=kidsState.index;
-    if(i>=kidsQuestions.length){showKidsResult();return;}
-    kidsQuestionBox.innerHTML='';
-    const qt=document.createElement('div');qt.className='question-text';
-    qt.textContent=`${i+1}. ${kidsQuestions[i]}`;kidsQuestionBox.appendChild(qt);
-    const ans=document.createElement('div');ans.className='answers';
-    const options=[
-      {t:'Per nulla / pochissimo',w:0},
-      {t:'Così così',w:1},
-      {t:'Abbastanza',w:2},
-      {t:'Molto / tantissimo',w:3}
-    ];
-    options.forEach(o=>{
-      const b=document.createElement('button');b.className='answer-btn';b.textContent=o.t;
-      b.onclick=()=>{kidsState.score+=o.w;kidsState.index++;renderKidsQuestion();};
-      ans.appendChild(b);
-    });
-    kidsQuestionBox.appendChild(ans);
-    const f=document.createElement('div');f.className='q-footer';
-    f.innerHTML=`<span>Domanda ${i+1} di ${kidsQuestions.length}</span><span>Non è una profezia, solo una stima.</span>`;
-    kidsQuestionBox.appendChild(f);
-  }
-  function showKidsResult(){
-    const p=getProfile();
-    let s=kidsState.score;
-    // Profilo attuale
-    if(p.haFigli==='si') s+=p.numFigli*3;
-    if(p.sposato==='si') s+=4;
-    if(p.casa==='proprieta') s+=3;
-    if(p.zona==='montagna' || p.zona==='mare') s+=1;
-    if(p.piaceZona==='no') s-=3;
-    if(p.trasferirsi==='si') s-=2;
-    const nowYear=new Date().getFullYear();
-    const age=p.dob ? nowYear - new Date(p.dob).getFullYear() : 30;
-    if(age<25) s+=2;
-    if(age>40) s-=3;
-
-    let range,label;
-    if(s<=8){range=[0,1];label='0–1 figlio (o nessuno) probabile';}
-    else if(s<=16){range=[1,2];label='1–2 figli probabili';}
-    else if(s<=24){range=[2,3];label='2–3 figli probabili';}
-    else if(s<=32){range=[3,4];label='3–4 figli probabili';}
-    else {range=[4,6];label='famiglia numerosa (4+ figli) probabile';}
-    const pred=Math.floor(Math.random()*(range[1]-range[0]+1))+range[0];
-
-    kidsResult.classList.remove('hidden');
-    kidsResult.innerHTML=
-      `<div class="result-title">Stima di L’Indovino</div>
-       <div class="result-main">${pred} figli (fascia: ${label})</div>
-       <div class="result-meta">
-         Questa è una stima probabilistica basata sulle risposte e sul profilo (età, stato familiare, casa, zona).
-         Non è una previsione reale: le scelte di vita, la salute e il caso contano molto di più.
-       </div>`;
-    addHistory('Quanti figli avrò?',`${pred} (fascia ${label})`);
-  }
-
-  // === GIOCO: 20Q MIGLIORATO ===
-  const twentyQBox=document.getElementById('twentyQBox');
-  const twentyQResult=document.getElementById('twentyQResult');
-  const twentyQItems=[
-    {name:'cane',animal:true,food:false,vehicle:false,tech:false,indoor:true},
-    {name:'gatto',animal:true,food:false,vehicle:false,tech:false,indoor:true},
-    {name:'pesce',animal:true,food:false,vehicle:false,tech:false,indoor:false},
-    {name:'auto',animal:false,food:false,vehicle:true,tech:true,indoor:false},
-    {name:'bicicletta',animal:false,food:false,vehicle:true,tech:false,indoor:false},
-    {name:'pizza',animal:false,food:true,vehicle:false,tech:false,indoor:true},
-    {name:'gelato',animal:false,food:true,vehicle:false,tech:false,indoor:true},
-    {name:'computer',animal:false,food:false,vehicle:false,tech:true,indoor:true},
-    {name:'telefono',animal:false,food:false,vehicle:false,tech:true,indoor:true},
-    {name:'albero',animal:false,food:false,vehicle:false,tech:false,indoor:false},
-    {name:'montagna',animal:false,food:false,vehicle:false,tech:false,indoor:false},
-    {name:'mare',animal:false,food:false,vehicle:false,tech:false,indoor:false},
-    {name:'sedia',animal:false,food:false,vehicle:false,tech:false,indoor:true},
-    {name:'libro',animal:false,food:false,vehicle:false,tech:false,indoor:true},
-    {name:'chitarra',animal:false,food:false,vehicle:false,tech:false,indoor:true}
-  ];
-  const attrQuestions=[
-    {key:'animal',text:'È un essere vivente / animale?'},
-    {key:'food',text:'Si mangia?'},
-    {key:'vehicle',text:'Serve principalmente per spostarsi?'},
-    {key:'tech',text:'È un oggetto tecnologico / elettronico?'},
-    {key:'indoor',text:'Di solito si trova in casa?'}
-  ];
-  const twentyQState={candidates:[],count:0,attrIndex:0,inGuess:false,currentGuess:null};
-
-  function startTwentyQ(){
-    twentyQState.candidates=[...twentyQItems];
-    twentyQState.count=0;twentyQState.attrIndex=0;twentyQState.inGuess=false;twentyQState.currentGuess=null;
-    twentyQResult.classList.add('hidden');
-    renderTwentyQQuestion();
-  }
-  function resetTwentyQ(){
-    twentyQBox.innerHTML='';twentyQResult.classList.add('hidden');
-    twentyQState.candidates=[...twentyQItems];
-    twentyQState.count=0;twentyQState.attrIndex=0;twentyQState.inGuess=false;twentyQState.currentGuess=null;
-  }
-  function renderTwentyQQuestion(){
-    twentyQBox.innerHTML='';
-    if(twentyQState.count>=40){
-      showTwentyQLose();return;
-    }
-    // se pochi candidati -> indovina
-    if(twentyQState.candidates.length<=3){
-      twentyQState.inGuess=true;
-      const guess=twentyQState.candidates[Math.floor(Math.random()*twentyQState.candidates.length)];
-      twentyQState.currentGuess=guess;
-      const qt=document.createElement('div');qt.className='question-text';
-      qt.textContent=`Domanda ${twentyQState.count+1}: stai pensando a "${guess.name}"?`;
-      twentyQBox.appendChild(qt);
-      const ans=document.createElement('div');ans.className='answers';
-      const yes=document.createElement('button');yes.className='answer-btn';yes.textContent='Sì, esatto';
-      yes.onclick=()=>{twentyQState.count++;showTwentyQGuess(guess.name,false);};
-      const no=document.createElement('button');no.className='answer-btn';no.textContent='No';
-      no.onclick=()=>{
-        twentyQState.count++;
-        twentyQState.candidates=twentyQState.candidates.filter(c=>c!==guess);
-        if(!twentyQState.candidates.length){showTwentyQLose();}else renderTwentyQQuestion();
-      };
-      ans.append(yes,no);twentyQBox.appendChild(ans);
-      const f=document.createElement('div');f.className='q-footer';
-      f.innerHTML=`<span>Candidati rimasti: ${twentyQState.candidates.length}</span><span>Domande: ${twentyQState.count+1}/40</span>`;
-      twentyQBox.appendChild(f);
-      return;
-    }
-    // domanda su attributo
-    const attr=attrQuestions[twentyQState.attrIndex%attrQuestions.length];
-    twentyQState.attrIndex++;
-    const qt=document.createElement('div');qt.className='question-text';
-    qt.textContent=`Domanda ${twentyQState.count+1}: ${attr.text}`;
-    twentyQBox.appendChild(qt);
-    const ans=document.createElement('div');ans.className='answers';
-    function answer(val){
-      twentyQState.count++;
-      if(val==='yes'){
-        twentyQState.candidates=twentyQState.candidates.filter(c=>c[attr.key]);
-      }else if(val==='no'){
-        twentyQState.candidates=twentyQState.candidates.filter(c=>!c[attr.key]);
-      } // 'maybe' non filtra
-      if(!twentyQState.candidates.length){
-        // database esaurito
-        showTwentyQLose();
-      }else{
-        renderTwentyQQuestion();
-      }
-    }
-    ['Sì','No','Non saprei / dipende'].forEach((t,i)=>{
-      const b=document.createElement('button');b.className='answer-btn';b.textContent=t;
-      b.onclick=()=>answer(i===0?'yes':i===1?'no':'maybe');
-      ans.appendChild(b);
-    });
-    twentyQBox.appendChild(ans);
-    const f=document.createElement('div');f.className='q-footer';
-    f.innerHTML=`<span>Candidati rimasti: ${twentyQState.candidates.length}</span><span>Domande: ${twentyQState.count+1}/40</span>`;
-    twentyQBox.appendChild(f);
-  }
-  function showTwentyQGuess(name,uncertain){
-    twentyQResult.classList.remove('hidden');
-    twentyQResult.innerHTML=
-      `<div class="result-title">La mia ipotesi</div>
-       <div class="result-main">${uncertain?'Forse ':' '}stavi pensando a: ${name}${uncertain?' (?)':''}</div>
-       <div class="result-meta">Se ho indovinato, bravo: hai risposto con coerenza. Se no, hai battuto il mio piccolo database.</div>`;
-    addHistory('Indovina a cosa sto pensando',`Ipotesi: ${name}`);
-  }
-  function showTwentyQLose(){
-    twentyQResult.classList.remove('hidden');
-    twentyQResult.innerHTML=
-      `<div class="result-title">Mi hai battuto!</div>
-       <div class="result-main">Mi hai battuto, non riesco a leggere i tuoi pensieri!</div>
-       <div class="result-meta">Ho finito le 40 domande o i candidati. Probabilmente pensavi a qualcosa che non è nel mio mini-database.</div>`;
-    addHistory('Indovina a cosa sto pensando','Non sono riuscito a indovinare');
-  }
-
-  // === MAGIC 8 BALL ===
-  const magic8Question=document.getElementById('magic8Question');
-  const magic8Ask=document.getElementById('magic8Ask');
-  const magic8Clear=document.getElementById('magic8Clear');
-  const magic8Inner=document.getElementById('magic8Inner');
-  const magic8Text=document.getElementById('magic8Text');
-  const yesAns=['Molto probabile','Quasi certamente sì','Le condizioni sono favorevoli','Sì, se mantieni la rotta','Sì, ma servirà impegno costante'];
-  const noAns=['Poco probabile','Non nelle condizioni attuali','Per ora la risposta è no','Non farci troppo affidamento','Solo cambiando molto la situazione'];
-  const neutAns=['È incerto','È presto per dirlo','Dipende da una scelta imminente','Il quadro è confuso, riprova più avanti','Potrebbe andare in entrambe le direzioni'];
-  function rand(arr){return arr[Math.floor(Math.random()*arr.length)];}
-  function classifyQ(t){
-    t=t.toLowerCase();
-    if(/(riuscir[oò]|avr[oò]|andrà? bene|funzionerà)/.test(t))return'yes';
-    if(/(perder[oò]|fallir[oò]|non riuscir[oò]|smetter[oò])/.test(t))return'no';
-    return'neutral';
-  }
-  magic8Ask.onclick=()=>{
-    const q=magic8Question.value.trim();
-    if(!q){alert('Scrivi una domanda prima.');return;}
-    const p=getProfile();
-    let base;
-    const type=classifyQ(q);
-    if(type==='yes')base=rand(yesAns);else if(type==='no')base=rand(noAns);else base=rand(neutAns);
-    let extra='';
-    if(/lavor/.test(q.toLowerCase()) && p.lavora==='si') extra=' Il tuo profilo lavorativo attuale pesa molto: valuta se ti senti davvero nel posto giusto.';
-    if(/trasfer/.test(q.toLowerCase()) && p.zona==='montagna') extra=' Vivere in montagna rende i cambiamenti più impegnativi ma spesso molto ripaganti.';
-    const full=base+extra;
-    magic8Inner.textContent=base;
-    magic8Text.classList.remove('hidden');
-    magic8Text.innerHTML=
-      `<div class="result-title">Risposta dell’oracolo</div>
-       <div class="result-main">${full}</div>
-       <div class="result-meta">È un gioco: le decisioni reali restano sempre tue.</div>`;
-    addHistory('Magic 8 Ball',base);
-  };
-  magic8Clear.onclick=()=>{
-    magic8Question.value='';magic8Inner.textContent='Fai\nuna domanda';magic8Text.classList.add('hidden');
-  };
-
-  // === TAROCCHI ===
-  const tarotDraw=document.getElementById('tarotDraw');
-  const tarotReset=document.getElementById('tarotReset');
-  const tarotResult=document.getElementById('tarotResult');
-  const tarotDeck=[
-    {name:'Il Mago',key:'mago',meaning:'Iniziativa, creatività, trasformare idee in azione.'},
-    {name:'La Papessa',key:'papessa',meaning:'Intuizione, ascolto interiore, bisogno di silenzio.'},
-    {name:'L’Imperatrice',key:'imperatrice',meaning:'Crescita, famiglia, progetti che maturano.'},
-    {name:'L’Imperatore',key:'imperatore',meaning:'Struttura, responsabilità, ordine.'},
-    {name:'Il Matto',key:'matto',meaning:'Nuovi inizi, cambiamento, buttarsi con coraggio.'},
-    {name:'La Ruota',key:'ruota',meaning:'Cicli che cambiano, occasioni da cogliere.'},
-    {name:'La Forza',key:'forza',meaning:'Resistenza, calma, capacità di reggere periodi intensi.'},
-    {name:'La Temperanza',key:'temperanza',meaning:'Equilibrio, mediazione, tempo di integrazione.'}
-  ];
-  tarotDraw.onclick=()=>{
-    const deck=[...tarotDeck];
-    const draw=[];
-    for(let i=0;i<3;i++){
-      const idx=Math.floor(Math.random()*deck.length);
-      draw.push(deck.splice(idx,1)[0]);
-    }
-    const p=getProfile();
-    tarotResult.classList.remove('hidden');
-    tarotResult.innerHTML='<div class="result-title">Lettura a 3 carte</div>';
-    const pos=['Presente','Sfida','Possibile esito'];
-    draw.forEach((c,i)=>{
-      let extra='';
-      if(c.key==='imperatrice' && (p.haFigli==='si' || p.numFigli>0)) extra=' (la dimensione familiare è chiaramente centrale per te).';
-      if(c.key==='mago' && p.lavora==='si') extra=' (potrebbe riguardare progetti o iniziative legate al lavoro).';
-      tarotResult.innerHTML+=`<div class="result-main">${pos[i]} – ${c.name}: ${c.meaning}${extra}</div>`;
-    });
-    tarotResult.innerHTML+=`<div class="result-meta">Lettura simbolica, non deterministica. Prendi solo ciò che risuona come spunto di riflessione.</div>`;
-    addHistory('Tarocchi',draw.map(x=>x.name).join(', '));
-  };
-  tarotReset.onclick=()=>tarotResult.classList.add('hidden');
-
-  // === PENDOLINO ===
-  const pendQuestion=document.getElementById('pendQuestion');
-  const pendAsk=document.getElementById('pendAsk');
-  const pendClear=document.getElementById('pendClear');
-  const pendLine=document.getElementById('pendLine');
-  const pendBob=document.getElementById('pendBob');
-  const pendResult=document.getElementById('pendResult');
-
-  pendAsk.onclick=()=>{
-    const q=pendQuestion.value.trim();
-    if(!q){alert('Scrivi una domanda per il pendolo.');return;}
-    const p=getProfile();
-    // Classificazione semplice
-    let base=['SI','NO','FORSE'];
-    let weight=[1,1,1];
-    if(/(risch|azzard)/i.test(q)) weight=[1,2,2];
-    if(/(famiglia|figli|bambin)/i.test(q)) weight=[2,1,1];
-    if(p.trasferirsi==='si' && /trasfer/i.test(q)) weight=[2,1,1];
-    const sum=weight.reduce((a,b)=>a+b,0);
-    let r=Math.random()*sum,choice=0;
-    for(let i=0;i<weight.length;i++){r-=weight[i];if(r<=0){choice=i;break;}}
-    const answer=base[choice];
-    // animazione
-    pendLine.style.animation='pendSwing 1.4s ease-in-out 1';
-    setTimeout(()=>{pendLine.style.animation='pendStill 2s infinite';},1500);
-    pendBob.textContent=answer;
-    pendResult.classList.remove('hidden');
-    pendResult.innerHTML=
-      `<div class="result-title">Risposta del pendolo</div>
-       <div class="result-main">${answer}</div>
-       <div class="result-meta">Solo un gioco: il pendolo non sostituisce le decisioni ragionate (e nemmeno un medico, un avvocato o un consulente 😄).</div>`;
-    addHistory('Pendolino',answer);
-  };
-  pendClear.onclick=()=>{
-    pendQuestion.value='';pendResult.classList.add('hidden');
-    pendLine.style.animation='pendStill 2s infinite';pendBob.textContent='?';
-  };
-
-  // === ASPETTATIVA DI VITA (gioco) ===
-  const lifeBox=document.getElementById('lifeBox');
-  const lifeResult=document.getElementById('lifeResult');
-  const lifeQuestions=[
-    'Fumi sigarette o svapo con nicotina?',
-    'Bevi alcolici frequentemente (più di 3 volte a settimana)?',
-    'Fai attività fisica moderata almeno 3 volte a settimana?',
-    'Com’è la tua alimentazione mediamente?',
-    'Come valuti il tuo livello di stress?',
-    'Dormi in media almeno 7 ore a notte?',
-    'Hai controlli medici di base regolari (analisi, visite)?'
-  ];
-  const lifeOptions=[
-    {t:'Mai / quasi mai',w:0},
-    {t:'Ogni tanto',w:1},
-    {t:'Spesso',w:2},
-    {t:'Quasi sempre / moltissimo',w:3}
-  ];
-  const lifeState={index:0,score:0};
-  function renderLifeQuestion(){
-    const i=lifeState.index;
-    if(i>=lifeQuestions.length){showLifeResult();return;}
-    lifeBox.innerHTML='';
-    const qt=document.createElement('div');qt.className='question-text';
-    qt.textContent=`${i+1}. ${lifeQuestions[i]}`;lifeBox.appendChild(qt);
-    const ans=document.createElement('div');ans.className='answers';
-    lifeOptions.forEach((o,idx)=>{
-      const b=document.createElement('button');b.className='answer-btn';b.textContent=o.t;
-      b.onclick=()=>{
-        // alcune domande sono "negative", altre "positive"
-        let w=o.w;
-        if(i===0 || i===1 || i===4) w=3-o.w; // fumo, alcol, stress: meno è meglio
-        lifeState.score+=w;
-        lifeState.index++;renderLifeQuestion();
-      };
-      ans.appendChild(b);
-    });
-    lifeBox.appendChild(ans);
-    const f=document.createElement('div');f.className='q-footer';
-    f.innerHTML=`<span>Domanda ${i+1} di ${lifeQuestions.length}</span><span>Ricorda: non è un parere medico.</span>`;
-    lifeBox.appendChild(f);
-  }
-  function showLifeResult(){
-    const p=getProfile();
-    // base expectancy
-    let base=80;
-    if(p.sesso==='F') base=84;
-    if(p.sesso==='M') base=78;
-    const nowYear=new Date().getFullYear();
-    const age=p.dob? nowYear - new Date(p.dob).getFullYear() : 35;
-    let score=lifeState.score; // max ~21
-    let delta=Math.round((score-10)*1.2); // da -12 a +13 circa
-    if(p.animali==='si') delta+=1; // pet leggermente positivo
-    if(p.guida==='si') delta-=1;   // guida espone a rischio, minimo
-    const estimate=base+delta;
-    const remaining=Math.max(estimate-age,5);
-    lifeResult.classList.remove('hidden');
-    lifeResult.innerHTML=
-      `<div class="result-title">Stima indicativa</div>
-       <div class="result-main">
-         Aspettativa di vita stimata (gioco): circa ${estimate} anni totali,
-         cioè altri ~${remaining} anni.
-       </div>
-       <div class="result-meta">
-         Valore puramente indicativo, basato su statistiche generiche + il tuo stile di vita.
-         Non sostituisce in alcun modo un parere medico o esami clinici.
-       </div>`;
-    addHistory('Aspettativa di vita',`${estimate} anni (game)`);
-  }
-
-  // === DOVE VIVRÒ TRA 10 ANNI ===
-  const whereBox=document.getElementById('whereBox');
-  const whereResult=document.getElementById('whereResult');
-  const whereQuestions=[
-    'Quanto ti piace il luogo in cui vivi ora?',
-    'Quanto ti attira vivere vicino al mare?',
-    'Quanto ti attira vivere in montagna / natura?',
-    'Quanto ti piacerebbe vivere in un’altra nazione?'
-  ];
-  const whereState={index:0,score:0,sea:0,mountain:0,city:0,abroad:0};
-  function renderWhereQuestion(){
-    const i=whereState.index;
-    if(i>=whereQuestions.length){showWhereResult();return;}
-    whereBox.innerHTML='';
-    const qt=document.createElement('div');qt.className='question-text';
-    qt.textContent=`${i+1}. ${whereQuestions[i]}`;whereBox.appendChild(qt);
-    const ans=document.createElement('div');ans.className='answers';
-    const opts=[
-      {t:'Per nulla',w:0},
-      {t:'Poco',w:1},
-      {t:'Abbastanza',w:2},
-      {t:'Molto',w:3}
-    ];
-    opts.forEach(o=>{
-      const b=document.createElement('button');b.className='answer-btn';b.textContent=o.t;
-      b.onclick=()=>{
-        if(i===0) whereState.city+=o.w; // piace dove vive (tende a restare)
-        if(i===1) whereState.sea+=o.w;
-        if(i===2) whereState.mountain+=o.w;
-        if(i===3) whereState.abroad+=o.w;
-        whereState.index++;renderWhereQuestion();
-      };
-      ans.appendChild(b);
-    });
-    whereBox.appendChild(ans);
-    const f=document.createElement('div');f.className='q-footer';
-    f.innerHTML=`<span>Domanda ${i+1} di ${whereQuestions.length}</span><span>Considera un orizzonte di circa 10 anni.</span>`;
-    whereBox.appendChild(f);
-  }
-  function showWhereResult(){
-    const p=getProfile();
-    // base: dove viva ora
-    if(p.zona==='mare') whereState.sea+=2;
-    if(p.zona==='montagna') whereState.mountain+=2;
-    if(p.zona==='citta') whereState.city+=2;
-    if(p.trasferirsi==='si'){whereState.abroad+=1;whereState.city-=1;}
-    if(p.piaceZona==='no'){whereState.city-=2;whereState.sea+=1;whereState.mountain+=1;}
-    const scores=[
-      {k:'mare',v:whereState.sea,label:'vicino al mare'},
-      {k:'montagna',v:whereState.mountain,label:'in montagna o in mezzo alla natura'},
-      {k:'citta',v:whereState.city,label:'in città o in una zona urbana'},
-      {k:'estero',v:whereState.abroad,label:'in un’altra nazione'}
-    ];
-    scores.sort((a,b)=>b.v-a.v);
-    const top=scores[0];
-    whereResult.classList.remove('hidden');
-    whereResult.innerHTML=
-      `<div class="result-title">Stima di L’Indovino</div>
-       <div class="result-main">Tra circa 10 anni è più probabile che tu viva ${top.label}.</div>
-       <div class="result-meta">
-         Stima basata sul tuo profilo e sulle risposte. Non è una promessa: vita, lavoro e famiglia
-         possono cambiare la direzione in qualsiasi momento.
-       </div>`;
-    addHistory('Dove vivrò tra 10 anni',top.label);
-  }
-
-  // === FORTUNA DELLA SETTIMANA ===
-  const luckBox=document.getElementById('luckBox');
-  function simpleHash(s){
-    let h=0;for(let i=0;i<s.length;i++)h=(h*31 + s.charCodeAt(i))|0;
-    return Math.abs(h);
-  }
-  function renderLuck(){
-    const p=getProfile();
-    const now=new Date();
-    const y=now.getFullYear();
-    const week=Math.floor((now.getTime()-new Date(y,0,1).getTime())/(7*24*60*60*1000));
-    const seedStr=(p.name+p.surname||'standard')+y+':'+week;
-    const h=simpleHash(seedStr);
-    let luck=(h%10)+1; // 1-10
-    // piccoli aggiustamenti
-    if(p.animali==='si') luck=Math.min(10,luck+1);
-    if(p.piaceZona==='no') luck=Math.max(1,luck-1);
-    const desc= luck<=3 ? 'Settimana un po’ impegnativa: prendila con calma e non strafare.' :
-                luck<=6 ? 'Settimana nella media: qualche opportunità, qualche intoppo.' :
-                luck<=8 ? 'Buona settimana: approfitta dei momenti favorevoli.' :
-                          'Settimana super positiva: ottimo momento per lanciare qualcosa di nuovo.';
-    luckBox.innerHTML=
-      `<div class="result-title">Indice di fortuna settimanale</div>
-       <div class="result-main">Fortuna: <strong>${luck}/10</strong></div>
-       <div class="result-meta">${desc} (valore generato per la settimana ${week+1} del ${y}, non cambia ricaricando la pagina).</div>`;
-    addHistory('Fortuna della settimana',`${luck}/10`);
-  }
-
-  // === INIT ===
-  renderProfiles();
-  updateProfileLabel();
-
-  updateCreateBtnState();
-  renderHistory();
-</script>
+<script src="script.js"></script>
 </body>
 </html>
