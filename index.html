@@ -2,6 +2,522 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>L'Indovino</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-theme="dark">
+  <div class="app">
+
+    <!-- SPLASH SCREEN -->
+    <div id="splashScreen" class="splash">
+      <div class="splash-inner">
+        <div class="splash-orb">
+          <div class="splash-orb-glow"></div>
+          <div class="splash-orb-icon">🔮</div>
+        </div>
+        <div class="splash-title">L'INDOVINO</div>
+        <div class="splash-sub">Quiz, statistiche &amp; un pizzico di magia</div>
+        <div class="splash-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERLAY DI BENVENUTO -->
+    <div id="startOverlay" class="overlay hidden">
+      <div class="modal">
+        <div class="modal-title">Benvenuto in L'Indovino</div>
+        <div class="modal-sub">
+          Puoi usare l'oracolo in modalità standard oppure creare dei profili per ricevere risposte più personalizzate.
+        </div>
+        <div class="modal-btns">
+          <button id="btnStartWithProfile" class="btn btn-primary">
+            🎭 Seleziona / crea profilo
+          </button>
+          <button id="btnStartWithoutProfile" class="btn btn-ghost">
+            ✨ Continua senza profilo
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="top-left">
+        <div class="logo">🔮</div>
+        <div>
+          <div class="title-main">L'INDOVINO</div>
+          <div class="title-sub">Quiz, statistiche &amp; un pizzico di magia</div>
+        </div>
+      </div>
+      <div class="top-right">
+        <div class="chip">
+          Profilo: <span id="currentProfileLabel">Standard</span>
+        </div>
+        <button class="nav-btn active" data-view="homeView">
+          <span>🏠</span> Home
+        </button>
+        <button class="nav-btn" data-view="profilesView">
+          <span>👥</span> Profili
+        </button>
+        <button class="nav-btn" data-view="settingsView">
+          <span>⚙️</span> Impostazioni
+        </button>
+      </div>
+    </header>
+
+    <!-- LAYOUT PRINCIPALE -->
+    <main class="layout">
+
+      <!-- HOME / GIOCHI -->
+      <section id="homeView" class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">
+              <span class="icon">🔮</span> Oracolo principale
+            </div>
+            <div class="card-sub">
+              Scegli una modalità: le risposte useranno il profilo attivo quando possibile.
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <!-- MENU GIOCHI -->
+          <div id="gamesMenu">
+            <div class="games-grid">
+
+              <div class="game-card" data-game="job">
+                <div class="game-chip">Questionario</div>
+                <div class="game-icon">💼</div>
+                <div class="game-name">Che lavoro fa per me?</div>
+                <div class="game-desc">
+                  20 domande per orientarti verso l'area professionale più adatta.
+                </div>
+              </div>
+
+              <div class="game-card" data-game="kids">
+                <div class="game-chip">Stima</div>
+                <div class="game-icon">👶</div>
+                <div class="game-name">Quanti figli avrò?</div>
+                <div class="game-desc">
+                  Un quiz statistico (non serio) per stimare quanti figli potresti avere.
+                </div>
+              </div>
+
+              <div class="game-card" data-game="twentyq">
+                <div class="game-chip">20 Questions</div>
+                <div class="game-icon">🧠</div>
+                <div class="game-name">Indovina a cosa sto pensando</div>
+                <div class="game-desc">
+                  Pensa a qualcosa e lascia che l'Indovino provi a scoprirlo.
+                </div>
+              </div>
+
+              <div class="game-card" data-game="magic8">
+                <div class="game-chip">Sì/No</div>
+                <div class="game-icon">🎱</div>
+                <div class="game-name">Magic 8 Ball</div>
+                <div class="game-desc">
+                  Fai una domanda e ascolta la risposta della sfera.
+                </div>
+              </div>
+
+              <div class="game-card" data-game="tarot">
+                <div class="game-chip">Tarocchi</div>
+                <div class="game-icon">🃏</div>
+                <div class="game-name">Tarocchi</div>
+                <div class="game-desc">
+                  Tre carte: Presente, Sfida, Possibile esito. Lettura simbolica.
+                </div>
+              </div>
+
+              <div class="game-card" data-game="pendulum">
+                <div class="game-chip">Pendolo</div>
+                <div class="game-icon">🪄</div>
+                <div class="game-name">Pendolino</div>
+                <div class="game-desc">
+                  Domande sì/no con il responso del pendolo.
+                </div>
+              </div>
+
+              <div class="game-card" data-game="life">
+                <div class="game-chip">Stima</div>
+                <div class="game-icon">⏳</div>
+                <div class="game-name">Aspettativa di vita</div>
+                <div class="game-desc">
+                  Un gioco statistico sulla tua “longevità”. Non è medicina!
+                </div>
+              </div>
+
+              <div class="game-card" data-game="where">
+                <div class="game-chip">Futuro</div>
+                <div class="game-icon">🌍</div>
+                <div class="game-name">Dove vivrò tra 10 anni?</div>
+                <div class="game-desc">
+                  Mare, montagna, città o estero? Una tendenza giocosa.
+                </div>
+              </div>
+
+              <div class="game-card" data-game="luck">
+                <div class="game-chip">Settimana</div>
+                <div class="game-icon">🍀</div>
+                <div class="game-name">Fortuna della settimana</div>
+                <div class="game-desc">
+                  Un indice 1–10 calcolato per te e per questa settimana.
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- VISTE DEI GIOCHI -->
+          <!-- Che lavoro fa per me -->
+          <div id="gameJob" class="game-view hidden">
+            <div class="breadcrumbs">🧭 Modalità · Che lavoro fa per me?</div>
+            <div class="row-inline" style="margin-top:6px;">
+              <button class="btn btn-ghost btn-sm" data-back>⬅ Torna ai giochi</button>
+              <div class="pill-info">Usa 20 domande per capire l'area professionale che ti si addice di più.</div>
+            </div>
+            <div id="jobQuestionBox" class="question-card"></div>
+            <div id="jobResult" class="result-box hidden"></div>
+          </div>
+
+          <!-- Quanti figli avrò -->
+          <div id="gameKids" class="game-view hidden">
+            <div class="breadcrumbs">🧭 Modalità · Quanti figli avrò?</div>
+            <div class="row-inline" style="margin-top:6px;">
+              <button class="btn btn-ghost btn-sm" data-back>⬅ Torna ai giochi</button>
+              <div class="pill-info">Quiz ludico che combina le tue risposte con i dati del profilo.</div>
+            </div>
+            <div id="kidsQuestionBox" class="question-card"></div>
+            <div id="kidsResult" class="result-box hidden"></div>
+          </div>
+
+          <!-- 20 Questions -->
+          <div id="gameTwentyq" class="game-view hidden">
+            <div class="breadcrumbs">🧭 Modalità · Indovina a cosa sto pensando</div>
+            <div class="row-inline" style="margin-top:6px;">
+              <button class="btn btn-ghost btn-sm" data-back>⬅ Torna ai giochi</button>
+              <div class="pill-info">Pensa a un oggetto comune (cane, auto, pizza, telefono…)</div>
+            </div>
+            <div id="twentyQBox" class="question-card"></div>
+            <div id="twentyQResult" class="result-box hidden"></div>
+          </div>
+
+          <!-- Magic 8 Ball -->
+          <div id="gameMagic8" class="game-view hidden">
+            <div class="breadcrumbs">🧭 Modalità · Magic 8 Ball</div>
+            <div class="row-inline" style="margin-top:6px;">
+              <button class="btn btn-ghost btn-sm" data-back>⬅ Torna ai giochi</button>
+              <div class="pill-info">Fai una domanda sì/no e consulta la sfera.</div>
+            </div>
+
+            <div class="two-cols">
+              <div class="mini-card">
+                <div class="mini-title">La tua domanda</div>
+                <div class="mini-sub">Scrivi una domanda chiusa (risposta sì/no).</div>
+                <textarea id="magic8Question" class="textarea" placeholder="Esempio: Riuscirò a cambiare lavoro entro un anno?"></textarea>
+                <div class="row-inline" style="margin-top:6px;">
+                  <button id="magic8Ask" class="btn btn-primary btn-sm">Chiedi alla sfera 🎱</button>
+                  <button id="magic8Clear" class="btn btn-ghost btn-sm">Pulisci</button>
+                </div>
+              </div>
+
+              <div class="mini-card" style="text-align:center;">
+                <div class="mini-title">Sfera Magica</div>
+                <div class="ball">
+                  <div id="magic8Inner" class="ball-inner">Fai<br>una domanda</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="magic8Text" class="result-box hidden"></div>
+          </div>
+
+          <!-- Tarocchi -->
+          <div id="gameTarot" class="game-view hidden">
+            <div class="breadcrumbs">🧭 Modalità · Tarocchi</div>
+            <div class="row-inline" style="margin-top:6px;">
+              <button class="btn btn-ghost btn-sm" data-back>⬅ Torna ai giochi</button>
+              <div class="pill-info">Pesca tre carte: Presente, Sfida, Possibile esito.</div>
+            </div>
+            <div class="row-inline" style="margin-top:8px;">
+              <button id="tarotDraw" class="btn btn-primary btn-sm">Pesca le carte 🃏</button>
+              <button id="tarotReset" class="btn btn-ghost btn-sm">Azzera lettura</button>
+            </div>
+            <div id="tarotResult" class="result-box hidden"></div>
+          </div>
+
+          <!-- Pendolino -->
+          <div id="gamePendulum" class="game-view hidden">
+            <div class="breadcrumbs">🧭 Modalità · Pendolino</div>
+            <div class="row-inline" style="margin-top:6px;">
+              <button class="btn btn-ghost btn-sm" data-back>⬅ Torna ai giochi</button>
+              <div class="pill-info">Domanda sì/no, poi lascia oscillare il pendolo.</div>
+            </div>
+
+            <div class="two-cols">
+              <div class="mini-card">
+                <div class="mini-title">La tua domanda</div>
+                <div class="mini-sub">Meglio una domanda secca e specifica.</div>
+                <textarea id="pendQuestion" class="textarea" placeholder="Esempio: È un buon momento per cambiare casa?"></textarea>
+                <div class="row-inline" style="margin-top:6px;">
+                  <button id="pendAsk" class="btn btn-primary btn-sm">Consulta il pendolo 🪄</button>
+                  <button id="pendClear" class="btn btn-ghost btn-sm">Pulisci</button>
+                </div>
+              </div>
+
+              <div class="mini-card">
+                <div class="mini-title">Pendolo</div>
+                <div class="pendulum-wrap">
+                  <div id="pendLine" class="pendulum-line"></div>
+                  <div id="pendBob" class="pendulum-bob">?</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="pendResult" class="result-box hidden"></div>
+          </div>
+
+          <!-- Aspettativa di vita -->
+          <div id="gameLife" class="game-view hidden">
+            <div class="breadcrumbs">🧭 Modalità · Aspettativa di vita</div>
+            <div class="row-inline" style="margin-top:6px;">
+              <button class="btn btn-ghost btn-sm" data-back>⬅ Torna ai giochi</button>
+              <div class="pill-info">Gioco statistico, non è una valutazione medica.</div>
+            </div>
+            <div id="lifeBox" class="question-card"></div>
+            <div id="lifeResult" class="result-box hidden"></div>
+          </div>
+
+          <!-- Dove vivrò tra 10 anni -->
+          <div id="gameWhere" class="game-view hidden">
+            <div class="breadcrumbs">🧭 Modalità · Dove vivrò tra 10 anni?</div>
+            <div class="row-inline" style="margin-top:6px;">
+              <button class="btn btn-ghost btn-sm" data-back>⬅ Torna ai giochi</button>
+              <div class="pill-info">Valuta mare, montagna, città o estero.</div>
+            </div>
+            <div id="whereBox" class="question-card"></div>
+            <div id="whereResult" class="result-box hidden"></div>
+          </div>
+
+          <!-- Fortuna della settimana -->
+          <div id="gameLuck" class="game-view hidden">
+            <div class="breadcrumbs">🧭 Modalità · Fortuna della settimana</div>
+            <div class="row-inline" style="margin-top:6px;">
+              <button class="btn btn-ghost btn-sm" data-back>⬅ Torna ai giochi</button>
+              <div class="pill-info">Valore da 1 a 10, deterministico per profilo e settimana.</div>
+            </div>
+            <div id="luckBox" class="result-box" style="margin-top:8px;"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- PROFILI -->
+      <section id="profilesView" class="card hidden">
+        <div class="card-header">
+          <div>
+            <div class="card-title">
+              <span class="icon">👥</span> Profili
+            </div>
+            <div class="card-sub">
+              Puoi salvare fino a 5 profili. Il nome del profilo è Nome + Cognome.
+            </div>
+          </div>
+          <div class="badge">
+            Profili: <span id="profilesBadge">0 / 5</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="profiles-list" id="profilesList"></div>
+          <div id="profilesEmpty" class="empty-text">
+            Nessun profilo salvato. Compila il modulo qui sotto per crearne uno.
+          </div>
+
+          <hr style="margin:10px 0;border:0;border-top:1px solid var(--border-subtle);" />
+
+          <div class="card-title small-title">Nuovo profilo</div>
+          <div class="card-sub">Più dati inserisci, più l'oracolo può divertirsi a personalizzare le risposte.</div>
+
+          <div class="form-grid" style="margin-top:6px;">
+            <div class="form-group">
+              <label for="pfNome">Nome</label>
+              <input id="pfNome" class="input" type="text" />
+            </div>
+            <div class="form-group">
+              <label for="pfCognome">Cognome</label>
+              <input id="pfCognome" class="input" type="text" />
+            </div>
+            <div class="form-group">
+              <label for="pfDob">Data di nascita</label>
+              <input id="pfDob" class="input" type="date" />
+            </div>
+            <div class="form-group">
+              <label for="pfSesso">Sesso</label>
+              <select id="pfSesso" class="select">
+                <option value="">Non specificato</option>
+                <option value="M">Maschio</option>
+                <option value="F">Femmina</option>
+                <option value="X">Altro / Preferisco non dirlo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pfSposato">Sei sposato/a?</label>
+              <select id="pfSposato" class="select">
+                <option value="">Non specificato</option>
+                <option value="si">Sì</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pfHaFigli">Hai figli?</label>
+              <select id="pfHaFigli" class="select">
+                <option value="">Non specificato</option>
+                <option value="si">Sì</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pfNumFigli">Se sì, quanti?</label>
+              <input id="pfNumFigli" class="input" type="number" min="0" />
+            </div>
+            <div class="form-group">
+              <label for="pfGuida">Guidi (auto, moto, ecc.)?</label>
+              <select id="pfGuida" class="select">
+                <option value="">Non specificato</option>
+                <option value="si">Sì</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pfAnimali">Hai animali domestici?</label>
+              <select id="pfAnimali" class="select">
+                <option value="">Non specificato</option>
+                <option value="si">Sì</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pfLavora">Lavori?</label>
+              <select id="pfLavora" class="select">
+                <option value="">Non specificato</option>
+                <option value="si">Sì</option>
+                <option value="no">No</option>
+                <option value="studio">Studio</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pfCasa">Casa</label>
+              <select id="pfCasa" class="select">
+                <option value="">Non specificato</option>
+                <option value="proprieta">Di proprietà</option>
+                <option value="affitto">In affitto</option>
+                <option value="altro">Altro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pfZona">Dove abiti?</label>
+              <select id="pfZona" class="select">
+                <option value="">Non specificato</option>
+                <option value="mare">Al mare</option>
+                <option value="montagna">In montagna</option>
+                <option value="citta">In città / pianura</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pfTrasferirsi">Vuoi trasferirti nei prossimi 7 anni?</label>
+              <select id="pfTrasferirsi" class="select">
+                <option value="">Non specificato</option>
+                <option value="si">Sì</option>
+                <option value="no">No</option>
+                <option value="forse">Forse</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pfPiaceZona">Ti piace dove abiti?</label>
+              <select id="pfPiaceZona" class="select">
+                <option value="">Non specificato</option>
+                <option value="si">Sì</option>
+                <option value="abbastanza">Abbastanza</option>
+                <option value="cosi">Così così</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row-inline" style="margin-top:8px;">
+            <button id="saveProfileBtn" class="btn btn-primary btn-sm">Salva profilo</button>
+            <button id="clearProfileFormBtn" class="btn btn-ghost btn-sm">Pulisci campi</button>
+            <button id="noProfileBtn" class="btn btn-ghost btn-sm">Usa modalità Standard</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- IMPOSTAZIONI -->
+      <section id="settingsView" class="card hidden">
+        <div class="card-header">
+          <div>
+            <div class="card-title">
+              <span class="icon">⚙️</span> Impostazioni &amp; storico
+            </div>
+            <div class="card-sub">
+              Cambia il tema visivo e consulta le ultime letture dell'oracolo.
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <!-- Tema -->
+          <div class="card-title small-title">Tema</div>
+          <div class="card-sub">Scegli il colore che preferisci. La scelta viene salvata sul tuo dispositivo.</div>
+          <div id="themeRow" class="theme-row">
+            <div class="theme-pill" data-theme="dark">
+              <div class="dot dot-dark"></div> Scuro
+            </div>
+            <div class="theme-pill" data-theme="light">
+              <div class="dot dot-light"></div> Chiaro
+            </div>
+            <div class="theme-pill" data-theme="red">
+              <div class="dot dot-red"></div> Rosso
+            </div>
+            <div class="theme-pill" data-theme="blue">
+              <div class="dot dot-blue"></div> Azzurro
+            </div>
+            <div class="theme-pill" data-theme="green">
+              <div class="dot dot-green"></div> Verde
+            </div>
+          </div>
+
+          <hr style="margin:10px 0;border:0;border-top:1px solid var(--border-subtle);" />
+
+          <!-- Storico -->
+          <div class="card-title small-title">Storico risultati</div>
+          <div class="card-sub">
+            L'Indovino annota gli ultimi esperimenti. Puoi cancellare la lista quando vuoi.
+          </div>
+          <div id="historyList" class="history-list"></div>
+          <div class="row-inline" style="margin-top:6px;">
+            <button id="clearHistoryBtn" class="btn btn-ghost btn-sm">Pulisci storico</button>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- JS -->
+  <script src="script.js" defer></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
   <title>L’Indovino</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="styles.css" />
